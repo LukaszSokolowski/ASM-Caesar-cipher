@@ -1,0 +1,1 @@
+C:\nc\nasm\nasm -o wynik.com -f bin cezar.asm
