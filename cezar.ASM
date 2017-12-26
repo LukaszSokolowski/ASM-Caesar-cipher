@@ -1,34 +1,34 @@
 	         	  ORG 100H
 ;-----------------------Start-programu-------------------
     start:
-            MOV DX, info
-            PUSH DX
-            CALL show
+            MOV  DX, info	;Adres zmiennej do DX
+            PUSH DX		;Adres wrzuc na stos
+            CALL show		;Wyswietla za pomoca procedury
 
-	    MOV DX, ent1
-            PUSH DX
-            CALL show
+	    MOV  DX, ent1	;Do DX adres zmiennej
+            PUSH DX		;Adres na stos
+            CALL show		;Wyswietla lancuch
 
-            MOV DX, info1
-            PUSH DX
-            CALL show
+            MOV  DX, info1	;Do DX adres zmiennej
+            PUSH DX		;Wrzuc na stos adres
+            CALL show		;Wywolanie procedury wyswietlajacej
 
-	    MOV DX, ent1
-	    PUSH DX
-	    CALL show	
+	    MOV  DX, ent1	;Do DX adres zmiennej
+	    PUSH DX		;Wrzuc adres na stos
+	    CALL show		;Wyswietlanie lancucha
 
-            MOV AH, 10
-            MOV DX, lancuch
-            INT 21H
+            MOV AH, 10		;Wejscie za pomoca bufora
+            MOV DX, lancuch	;Adres zmiennej lancuch 
+            INT 21H		;Przerwanie DOS
+		
+            MOV DX, ent1	;Wrzuc adres zmiennej do DX
+            PUSH DX		;Wrzuc adres na stos
+            CALL show		;Wywolanie procedury wyswietlajacej
 
-            MOV DX, ent1
-            PUSH DX
-            CALL show
-
-            MOV DX, lancuch
-            ADD DX, 2
-            PUSH DX
-	    CALL show
+            MOV DX, lancuch	;Przenies zmienna pobrana z wejscia buforowego
+            ADD DX, 2		;przesun adres o 2 
+            PUSH DX		;Wrzuc adres na stos
+	    CALL show		;Wyswietlanie lancucha
 
 ;-----------------------Koniec-programu------------------
    koniec:
