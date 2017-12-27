@@ -21,24 +21,24 @@
             MOV DX, lancuch	;Adres zmiennej lancuch 
             INT 21H		;Przerwanie DOS
 		
-            MOV DX, ent1	;Wrzuc adres zmiennej do DX
+            MOV  DX, ent1	;Wrzuc adres zmiennej do DX
             PUSH DX		;Wrzuc adres na stos
             CALL show		;Wywolanie procedury wyswietlajacej
 
-            MOV DX, lancuch	;Przenies zmienna pobrana z wejscia buforowego
-            ADD DX, 2		;przesun adres o 2 
+            MOV  DX, lancuch	;Przenies zmienna pobrana z wejscia buforowego
+            ADD  DX, 2		;przesun adres o 2 
             PUSH DX		;Wrzuc adres na stos
 	    CALL show		;Wyswietlanie lancucha
 
-	    MOV DX, ent1
-	    PUSH DX
-	    CALL show
+	    MOV  DX, ent1	;Przenies do DX adres zmiennej ent1
+	    PUSH DX		;Wrzuc na stos adres
+	    CALL show		;Wyswietl lancuch
 
-	    MOV DX, info2
-	    PUSH DX
-	    CALL show
+	    MOV  DX, info2	;Przenies do DX adres zmiennej info2
+	    PUSH DX		;Wrzuc adres na stos
+	    CALL show		;Wyswietl lancuch
 
-        CALL input
+            CALL input		;Wywolaj procedure wprowadzenia wartosci przesuniecia
 
 ;-----------------------Koniec-programu----------------------
    koniec:
@@ -48,7 +48,7 @@
 info      db    "Witaj w programie wykorzystujacym szyfrowanie cezara.$"
 info1     db    "Podaj slowo do zaszyfrowania:$ "
 info2	  db    "Podaj przesuniecie do uzycia w szyfrowaniu: $"
-info3     db    "Podales bledne dane. $"
+info3     db    "PODALES BLEDNE DANE! $"
 lancuch   db	255
           db	  0
 times 256 db    '$' 
@@ -135,17 +135,17 @@ input:
 ;-----------------------------Obsluga-bledow-----------------------------
 
 _error:
-        MOV  DX, ent1
-        PUSH DX
-        CALL show
+        MOV  DX, ent1       ;Przenies do DX adres zmiennej ent1
+        PUSH DX             ;Wrzuc adres na stos
+        CALL show           ;Wyswietl lancuch
 
-        MOV  DX, info3
-        PUSH DX
-        CALL show
+        MOV  DX, info3      ;Przenies adres zmiennej info3
+        PUSH DX             ;Wrzuc adres na stos
+        CALL show           ;Wyswietl lancuch
     
-    MOV  DX, ent1
-    PUSH DX
-    CALL show
+    MOV  DX, ent1           ;Wrzuc adres zmiennej do DX
+    PUSH DX                 ;Wrzuc na stos
+    CALL show               ;Wyswietl lancuch
 
-        JMP xError
+        JMP xError          ;Bezwarunkowo przejdz do etykiety xError
 ;------------------------------------------------------------------------ 
