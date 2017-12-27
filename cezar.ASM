@@ -25,8 +25,7 @@
             PUSH DX		;Wrzuc adres na stos
             CALL show		;Wywolanie procedury wyswietlajacej
 
-
-            CALL lower
+            CALL lower		;Sprawdz czy lancuch zawiera duze litery
 
             MOV  DX, inpStrin	;Przenies zmienna pobrana z wejscia buforowego
             ADD  DX, 2		;przesun adres o 2 
@@ -41,7 +40,17 @@
 	    PUSH DX		;Wrzuc adres na stos
 	    CALL show		;Wyswietl lancuch
 
-            CALL input		;Wywolaj procedure wprowadzenia wartosci przesuniecia
+        CALL input		;Wywolaj procedure wprowadzenia wartosci przesuniecia
+
+        ;MOV  DX, ent1   ;Wrzuc adres zmiennej ent1 do DX
+        ;PUSH DX         ;Adres na stos
+        ;CALL show       ;Wywolaj procedure wyswietlenia znakow
+            
+        MOV  DX, info4  ;Adres zmiennej do DX
+        PUSH DX         ;Adres wrzuc na stos
+        CALL show       ;Wywolaj procedure wyswietlenia znakow
+
+
 
 ;-----------------------Koniec-programu----------------------
    koniec:
@@ -50,8 +59,9 @@
 ;-------------------------Zmienne----------------------------
 info      db    "Witaj w programie wykorzystujacym szyfrowanie cezara.$"
 info1     db    "Podaj slowo do zaszyfrowania:$ "
-info2	  db    "Podaj przesuniecie do uzycia w szyfrowaniu: $"
+info2	  db    "Podaj wartosc bezwzgledna przesuniecia w zakresie od 0 do 25: $"
 info3     db    "PODALES BLEDNE DANE! $"
+info4     db    "Przesuniecie ma byc dodatnie czy ujemne? Wprowadz - gdy ujemne + gdy dodatnie.$"
 inpStrin  db	255
           db	  0
 times 256 db    '$' 
@@ -125,6 +135,13 @@ input:
     
             loop poploop        ;Wykonuj petle
 
+            XOR AX, AX          ;Wyzeruj AX
+            MOV AX, [shift]     ;Przenies wartosc przesuniecia do AX
+            CMP AX, 0           ;Porownaj czy mniejsze od 0
+            JL _error           ;Jesli tak to wyswietl blad
+            CMP AX, 25          ;Sprawdz czy wieksze od 25
+            JG _error           ;Jesli wieksze to wyswietl blad
+
         MOV AX, [adr_init]      ;Przenies do AX adres powrotu procedury
         PUSH AX                 ;Wrzuc adres powrotu na stos
         XOR AX, AX      	;Wyzeruj AX
@@ -180,4 +197,14 @@ toLowEnd:
          MOV  AX, [adr_init]     ;Do AX wartosc adresu powrotu
          PUSH AX                 ;Wrzuc adres powrotu na stos
 RET
-;-----------------------------------------------------------------------------
+;----------------------------Wykonaj-przesuniecie-----------------------------------------
+doShift:
+
+        POP AX
+        MOV [adr_init], AX
+
+
+        MOV  AX, [adr_init]
+        PUSH AX
+RET
+;--------------------Sprawdz-czy-zakres-przesuniecia-poprawny------------------------------
