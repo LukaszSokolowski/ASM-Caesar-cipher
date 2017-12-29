@@ -41,42 +41,41 @@
 		PUSH DX         ;Adres na stos
 		CALL show       ;Wywolaj procedure wyswietlenia znakow
         
-        MOV AH, 1       ;Wczytanie znaku z wejscia
-        INT 21H         ;Przerwanie DOS
-        CMP AL, '-'
-        JE  ujemn
-        CMP AL, '+'
-        JE  dodat
+		MOV AH, 1       ;Wczytanie znaku z wejscia
+        	INT 21H         ;Przerwanie DOS
+        	CMP AL, '-' ;Porownaj AL z wartoscia znaku minusa
+        	JE  ujemn   ;Jesli tak przejdz do ujemnego przesuniecia
+        	CMP AL, '+' ;Porownaj AL z wartoscia znaku plusa
+        	JE  dodat   ;Jesli tak to przejdz do dodatniego przesuniecia
 
 
-   reslt:
+  	 reslt:
 
-        MOV  DX, ent1
-        PUSH DX
-        CALL show
+        	MOV  DX, ent1      ;Przenies do DX adres zmiennej ent1
+        	PUSH DX            ;Wrzuc adres zmiennej na stos
+        	CALL show          ;Wywolaj funkcje wyswietlania lancuchow
 
-        MOV  DX, info5
-        PUSH DX
-        CALL show
+        	MOV  DX, info5     ;Przenies do DX adres zmiennej info5
+        	PUSH DX            ;Wrzuc adres zmiennej na stos  
+        	CALL show          ;Wywolaj procedure wyswietlenia znakow
+                
+        	MOV  DX, inpStrin  ;przenies do DX adres zmiennej inpStrin  
+        	ADD  DX, 2         ;Dodaj do adresu wartosc 2
+        	PUSH DX            ;Wrzuc adres na stos
+        	CALL show          ;Wywolaj procedure wyswietlenia znakow
 
-        MOV  DX, inpStrin
-        ADD  DX, 2
-        PUSH DX
-        CALL show
 
-
-;-----------------------Koniec-programu----------------------
-   koniec:
-            MOV AX, 4C00h
-            INT 21H
-;-------------------------Zmienne----------------------------
+;--------------------------Koniec-programu----------------------------------------------
+   	koniec:
+            	MOV AX, 4C00h
+            	INT 21H
+;-------------------------------Zmienne-------------------------------------------------
 info      db    "Witaj w programie wykorzystujacym szyfrowanie cezara.$"
 info1     db    "Podaj slowo do zaszyfrowania:$ "
 info2	  db    "Podaj wartosc bezwzgledna przesuniecia w zakresie od 0 do 25: $"
 info3     db    "PODALES BLEDNE DANE! $"
 info4     db    "Przesuniecie ma byc dodatnie czy ujemne? Wprowadz - gdy ujemne + gdy dodatnie.$"
 info5     db    "Zaszyfrowany lancuch ma postac: $"
-info6     db    "Lancuch przed: $"
 inpStrin  db	255
           db	  0
 times 256 db    '$' 
@@ -86,7 +85,7 @@ multip    dw    1
 shift     dw    0
 st_count  dw    0
 shiftCP   db    0
-;------------------Wypisanie-lancucha-------------------------
+;-----------------------------Wypisanie-lancucha-----------------------------------------
 show:   
         POP  AX     ;Zrzuc adres powrotu
         POP  BX     ;Zrzuc adres zmiennej do wyswietlenia
@@ -104,7 +103,7 @@ show:
             JMP showloop     ;Przejdz do kolejnego kroku
      showEND:
 RET
-;---------------------Wprowadzanie-przesuniecia-------------------------------
+;-----------------------------Wprowadzanie-przesuniecia-------------------------------------
 input:
         POP AX             	;Zrzuc adres powrotu
         MOV [adr_init], AX  	;Przenies adres do AX
@@ -138,16 +137,16 @@ input:
             XOR BH, BH      	;Wyzeruj gore rejestru BX
         
             XOR AX, AX      	;Wyzeruj AX 
-            MOV AX, [multip]   ;Przenies do AX wartosc mnoznika
+            MOV AX, [multip]    ;Przenies do AX wartosc mnoznika
             MUL BX          	;Pomnoz AX razy BX wynik w DX:AX
         
-            ADD [shift], AX   ;Dodaj do zmiennej tymczasowej kolejna wartosc
+            ADD [shift], AX     ;Dodaj do zmiennej tymczasowej kolejna wartosc
         
             MOV BX, 10      	;Zaladuj rejestr BX wartoscia 10
             XOR BH, BH      	;Wyzeruj gore BX
-            MOV AX, [multip]   ;Przenies do AX wartosc mnoznika
+            MOV AX, [multip]    ;Przenies do AX wartosc mnoznika
             MUL BX          	;Z kazdym kolejnym zdjeciem ze stosu mnoznik wzrasta x 10 po 
-            MOV [multip], AX   ;Przenies mnoznik do zmiennej 
+            MOV [multip], AX    ;Przenies mnoznik do zmiennej 
     
             loop poploop        ;Wykonuj petle
 
@@ -162,12 +161,12 @@ input:
         PUSH AX                 ;Wrzuc adres powrotu na stos
         XOR AX, AX      	;Wyzeruj AX
         MOV AX, 1       	;Przenies do AX wartosc poczatkowa mnoznika
-        MOV [multip], AX       ;Do zmiennej mnoznik przenies jego wartosc poczatkowa
+        MOV [multip], AX        ;Do zmiennej mnoznik przenies jego wartosc poczatkowa
         XOR AX, AX      	;Wyzeruj AX
         XOR BX, BX      	;Wyzeruj BX
         
   RET
-;-----------------------------Obsluga-bledow-----------------------------
+;--------------------------------------Obsluga-bledow-------------------------------------
 
 _error:
         MOV  DX, ent1       ;Przenies do DX adres zmiennej ent1
@@ -184,7 +183,7 @@ _error:
 
         JMP xError          ;Bezwarunkowo przejdz do etykiety xError
 
-;------------------Sprawdzenie-czy-zawiera-duze-litery----------------------- 
+;------------------------------Sprawdzenie-czy-zawiera-duze-litery----------------------- 
 
 lower:
          POP AX                  ;Zrzuc adres powrotu
@@ -213,7 +212,7 @@ toLowEnd:
          MOV  AX, [adr_init]     ;Do AX wartosc adresu powrotu
          PUSH AX                 ;Wrzuc adres powrotu na stos
 RET
-;--------------------------------Wykonaj-przesuniecie-ujemne-------------------------------
+;---------------------------------------Wykonaj-przesuniecie-ujemne-------------------------------
 ujemn:
 
         XOR AX, AX              ;Wyczysc AX
@@ -250,7 +249,7 @@ ujemn:
 ujemEnd:
       JMP reslt
 
-;-------------------------------Wykonaj-przesuniecie-dodatnie----------------------------
+;-------------------------------------------Wykonaj-przesuniecie-dodatnie----------------------------
 dodat:
         XOR AX, AX              ;Wyczysc AX
         XOR BX, BX              ;Wyczysc BX
@@ -260,10 +259,10 @@ dodat:
         ADD BX, 1               ;Dodaj do rejestru bazowego BX wartosc 1
 
      shiftP:
-            INC DI
-            MOV DL, [BX + DI]
-            CMP DL, '$'
-            JE dodEnd
+            INC DI		;Zwieksz rejestr DI o jeden
+            MOV DL, [BX + DI]	;Wrzuc do DL znak spod adresu BX + DI
+            CMP DL, '$'		;Porownaj czy to znak dolara
+            JE dodEnd		;Jesli tak to koniec lancucha czyli przejdz do konca etykiety
             CMP DL, 97          ;Sprawdz czy znak inny niz litera
             JL shiftP           ;Jesli tak to przejdz do kolejnego kroku bez szyfrowania
             CMP DL, 122         ;Sprawdz czy znak inny niz litera
